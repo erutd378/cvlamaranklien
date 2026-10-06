@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard • CV & Lamaran</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; border-radius:0 !important; }
+    :root {
+      --bg:#ffffff; --surface:#ffffff; --surface-2:#f7f8fa; --border:#e2e5eb;
+      --text-1:#0f172a; --text-2:#475569; --text-3:#94a3b8;
+      --accent:#2563eb; --accent-3:#7c3aed;
+      --shadow:0 1px 2px rgba(15,23,42,0.06);
+    }
+    html, body { width:100%; height:100%; overflow:hidden; }
+    body {
+      font-family:'Inter', sans-serif; color:var(--text-1); background:var(--bg);
+      display:flex; align-items:center; justify-content:center; padding:8px;
+    }
+    .dashboard { width:100%; height:100%; max-width:1050px; display:flex; gap:8px; }
+
+    /* ====== NAVIGASI KIRI ====== */
+    .nav-left {
+      width:140px; flex-shrink:0;
+      background:linear-gradient(160deg,#d9f7e8 0%,#c9f0f5 45%,#d4e9fb 100%);
+      border:1px solid #b6e3d8; box-shadow:0 1px 3px rgba(15,23,42,0.06);
+      padding:9px 7px; display:flex; flex-direction:column; overflow:hidden;
+    }
+    .logo { display:flex; align-items:center; gap:5px; font-weight:700; font-size:0.78rem;
+      padding:2px 3px 7px 3px; border-bottom:1px solid rgba(15,23,42,0.08);
+      margin-bottom:7px; color:#0f3d33; }
+    .logo i { font-size:0.88rem; color:#10b981; }
+    .nav-menu { display:flex; flex-direction:column; gap:2px; flex:1; overflow-y:auto; scrollbar-width:none; }
+    .nav-menu::-webkit-scrollbar { display:none; }
+    .nav-item { display:flex; align-items:center; gap:6px; padding:6px 8px;
+      color:#145c4a; font-weight:500; font-size:0.65rem; cursor:pointer; user-select:none;
+      border:1px solid transparent; white-space:nowrap; overflow:hidden; }
+    .nav-item i { width:12px; text-align:center; font-size:0.65rem; color:#0f9d8f; flex-shrink:0; }
+    .nav-item span { overflow:hidden; text-overflow:ellipsis; }
+    .nav-item:hover { background:rgba(255,255,255,0.55); color:#083f33; }
+    .nav-item:hover i { color:#059669; }
+    .nav-item.active { background:linear-gradient(135deg,#10b981,#0ea5e9); color:#ffffff;
+      border-color:rgba(255,255,255,0.4); box-shadow:0 2px 6px rgba(16,185,129,0.35); }
+    .nav-item.active i { color:#ffffff; }
+    .nav-footer { margin-top:auto; font-size:0.5rem; color:#3d8a7a; text-align:center;
+      padding-top:5px; border-top:1px solid rgba(15,23,42,0.08); }
+
+    /* ====== KONTEN KANAN ====== */
+    .content-right { flex:1; min-width:0; max-width:900px; background:var(--surface);
+      border:1px solid var(--border); box-shadow:var(--shadow); padding:10px 12px;
+      display:flex; flex-direction:column; overflow:hidden; }
+    .content-header { display:flex; justify-content:space-between; align-items:center;
+      margin-bottom:7px; padding-bottom:7px; border-bottom:1px solid var(--border); flex-shrink:0; }
+    .content-header h2 { font-weight:700; font-size:0.85rem; letter-spacing:-0.2px; color:var(--text-1); }
+    .badge { background:var(--surface-2); border:1px solid var(--border); padding:3px 7px;
+      font-size:0.52rem; font-weight:600; color:var(--text-2); display:flex; align-items:center; gap:4px; }
+    .badge i { color:var(--accent); }
+
+    .data-grid { flex:1; min-height:0; display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+      grid-auto-rows:min-content; gap:8px; overflow-y:auto; overflow-x:hidden;
+      padding-right:4px; scrollbar-width:thin; scrollbar-color:#cbd5e1 transparent; }
+    .data-grid::-webkit-scrollbar { width:5px; }
+    .data-grid::-webkit-scrollbar-track { background:transparent; }
+    .data-grid::-webkit-scrollbar-thumb { background:#cbd5e1; }
+
+    /* ====== KARTU ====== */
+    .data-card { background:var(--surface); border:1px solid var(--border);
+      padding:9px 9px; display:flex; flex-direction:column; gap:7px; overflow:hidden; }
+    .data-card:hover { border-color:var(--accent); box-shadow:0 0 0 1px var(--accent); }
+    .card-header { display:flex; align-items:center; gap:7px; }
+    .avatar { width:28px; height:28px; flex-shrink:0; display:flex; align-items:center;
+      justify-content:center; font-weight:700; font-size:0.68rem; color:#ffffff; background:var(--text-1); }
+    .card-header h4 { font-size:0.72rem; font-weight:600; color:var(--text-1);
+      letter-spacing:-0.2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .card-header p { font-size:0.55rem; color:var(--text-3); margin-top:1px;
+      display:flex; align-items:center; gap:3px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .card-body { font-size:0.62rem; line-height:1.4; color:var(--text-2);
+      display:flex; flex-direction:column; gap:4px; }
+    .card-body > div { display:flex; align-items:center; gap:5px; overflow:hidden;
+      text-overflow:ellipsis; white-space:nowrap; }
+    .card-body i { color:var(--text-3); width:11px; text-align:center; font-size:0.6rem; flex-shrink:0; }
+    .card-footer { margin-top:1px; display:flex; align-items:center; gap:4px;
+      font-size:0.55rem; color:var(--text-3); border-top:1px solid var(--border); padding-top:5px; }
+    .card-footer i { color:var(--accent); }
+
+    /* ====== LINK WEB CV ====== */
+    .link-preview { background:var(--surface-2); border:1px solid var(--border);
+      padding:4px 6px; font-size:0.55rem; display:flex; align-items:center; gap:4px;
+      margin-top:1px; overflow:hidden; }
+    .link-preview i { color:var(--accent-3); font-size:0.65rem; flex-shrink:0; }
+    .link-preview a { color:var(--accent); text-decoration:none; overflow:hidden;
+      text-overflow:ellipsis; white-space:nowrap; flex:1; }
+    .link-preview a:hover { text-decoration:underline; }
+
+    /* ====== FOTO ====== */
+    .photo-grid-only { display:grid; grid-template-columns:repeat(2,1fr); gap:6px; margin-top:4px; }
+    .photo-grid-only img { width:100%; height:70px; object-fit:cover;
+      border:1px solid var(--border); display:block; background:var(--surface-2);
+      cursor:pointer; transition:border-color 0.2s ease, box-shadow 0.2s ease; }
+    .photo-grid-only img:hover { border-color:var(--accent); box-shadow:0 0 0 1px var(--accent); }
+
+    .empty-state { grid-column:1 / -1; text-align:center; padding:30px 20px;
+      color:var(--text-3); font-size:0.72rem; display:flex; flex-direction:column;
+      align-items:center; gap:8px; }
+    .empty-state i { font-size:1.6rem; color:#cbd5e1; }
+
+    /* ====== HERO BERANDA ====== */
+    .hero-beranda {
+      grid-column: 1 / -1;
+      height: 100%;
+      padding: 16px 20px;
+      background:
+        radial-gradient(350px 180px at 0% 0%, rgba(16,185,129,0.10), transparent 60%),
+        radial-gradient(350px 180px at 100% 100%, rgba(14,165,233,0.12), transparent 60%),
+        linear-gradient(160deg, #f8fdfb 0%, #f4fafd 60%, #f0f7ff 100%);
+      border: 1px solid #d7ece4;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .hero-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #ffffff;
+      border: 1px solid #b6e3d8;
+      padding: 3px 9px;
+      font-size: 0.5rem;
+      font-weight: 700;
+      letter-spacing: 0.9px;
+      text-transform: uppercase;
+      color: #0f766e;
+      width: fit-content;
+      margin-bottom: 9px;
+    }
+    .hero-label i { color: #10b981; font-size: 0.55rem; }
+
+    .hero-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.8px;
+      color: #0f172a;
+      margin-bottom: 4px;
+    }
+    .hero-title .gradient {
+      background: linear-gradient(120deg, #10b981 0%, #0ea5e9 55%, #2563eb 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #145c4a;
+      letter-spacing: -0.2px;
+      margin-bottom: 8px;
+    }
+
+    .hero-divider {
+      width: 40px;
+      height: 2px;
+      background: linear-gradient(90deg, #10b981, #0ea5e9);
+      margin-bottom: 8px;
+    }
+
+    .hero-desc {
+      font-size: 0.62rem;
+      line-height: 1.5;
+      color: #475569;
+      max-width: 500px;
+      margin-bottom: 12px;
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      max-width: 100%;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .hero-stat {
+      background: #ffffff;
+      border: 1px solid #e2e5eb;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 58px;
+      overflow: hidden;
+    }
+
+    .hero-stat .num {
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: -0.4px;
+      line-height: 1;
+      white-space: nowrap;
+    }
+    .hero-stat .num.green { color: #10b981; }
+    .hero-stat .num.blue  { color: #0ea5e9; }
+    .hero-stat .num.blue2 { color: #2563eb; }
+
+    .hero-stat .label {
+      font-size: 0.52rem;
+      font-weight: 600;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 5px;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .hero-stat .label i { color: #10b981; font-size: 0.5rem; flex-shrink: 0; }
+
+    .hero-footer {
+      padding-top: 8px;
+      border-top: 1px dashed #d7ece4;
+      font-size: 0.55rem;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .hero-footer i { color: #10b981; }
+
+    /* ====== LIGHTBOX ZOOM ====== */
+    .lightbox { position:fixed; inset:0; background:rgba(15,23,42,0.85);
+      display:none; align-items:center; justify-content:center; z-index:9999;
+      padding:40px; cursor:zoom-out; }
+    .lightbox.open { display:flex; }
+    .lightbox img { max-width:90vw; max-height:85vh; border:3px solid #ffffff;
+      box-shadow:0 30px 80px rgba(0,0,0,0.6);
+      transform:scale(0.3); opacity:0;
+      transition:transform 0.45s cubic-bezier(0.22,1,0.36,1), opacity 0.45s ease; }
+    .lightbox.open img { transform:scale(1); opacity:1; }
+    .lightbox-close { position:absolute; top:18px; right:22px; width:36px; height:36px;
+      background:#ffffff; color:#0f172a; border:none; font-size:1.1rem; cursor:pointer;
+      display:flex; align-items:center; justify-content:center; z-index:10000;
+      transition:background 0.2s ease; }
+    .lightbox-close:hover { background:#e2e5eb; }
+    .lightbox-caption { position:absolute; bottom:22px; left:50%; transform:translateX(-50%);
+      color:#ffffff; font-size:0.75rem; background:rgba(0,0,0,0.5); padding:6px 14px;
+      letter-spacing:0.3px; opacity:0; transition:opacity 0.45s ease 0.2s; }
+    .lightbox.open .lightbox-caption { opacity:1; }
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <aside class="nav-left">
+      <div class="logo"><i class="fas fa-layer-group"></i><span>CV•Board</span></div>
+      <nav class="nav-menu">
+        <div class="nav-item active" data-target="beranda">
+          <i class="fas fa-home"></i><span>Beranda</span>
+        </div>
+        <div class="nav-item" data-target="koleksi-foto">
+          <i class="fas fa-images"></i><span>Koleksi Foto</span>
+        </div>
+        <div class="nav-item" data-target="semua-data">
+          <i class="fas fa-database"></i><span>Semua Data</span>
+        </div>
+      </nav>
+      <div class="nav-footer">v4.5</div>
+    </aside>
+
+    <main class="content-right">
+      <div class="content-header">
+        <h2 id="contentTitle">Beranda</h2>
+        <div class="badge"><i class="fas fa-bolt"></i> Live</div>
+      </div>
+      <div class="data-grid" id="dataGrid"></div>
+    </main>
+  </div>
+
+  <!-- Lightbox Zoom -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Tutup">
+      <i class="fas fa-times"></i>
+    </button>
+    <img id="lightboxImg" src="" alt="Zoom Foto">
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
+
+  <script>
+    /* =====================================================
+       DATA SOURCE — setiap orang punya link web CV
+       ===================================================== */
+    const dataOrang = [
+      { id: 1, nama: 'Raihana', posisi: 'Frontend Developer', email: 'raihana@email.com', telepon: '0812-3456-7890', link: 'https://cvraihanna.vercel.app/' },
+      { id: 2, nama: 'Findi', posisi: 'UI/UX Designer', email: 'findi@email.com', telepon: '0813-9876-5432', link: 'https://cvfindi.vercel.app/' },
+      { id: 3, nama: 'Dimas', posisi: 'Data Scientist', email: 'dimas@email.com', telepon: '0821-1122-3344', link: 'https://cvdimassaputra.vercel.app/' },
+      { id: 4, nama: 'Tedi', posisi: 'Digital Marketer', email: 'tedi@email.com', telepon: '0856-7788-9900', link: 'https://cvtedimentawai.vercel.app/' },
+      { id: 5, nama: 'Mega', posisi: 'Backend Engineer', email: 'mega@email.com', telepon: '0877-6655-4433', link: 'https://cvmega-one.vercel.app/' }
+      
+    ];
+
+    /* =====================================================
+       HELPER — render kartu (dengan link web CV)
+       ===================================================== */
+    function buildCard(orang) {
+      const inisial = orang.nama.substring(0, 2).toUpperCase();
+      return `
+        <div class="data-card" data-id="${orang.id}">
+          <div class="card-header">
+            <div class="avatar">${inisial}</div>
+            <div style="min-width:0; overflow:hidden;">
+              <h4 title="${orang.nama}">${orang.nama}</h4>
+              <p title="${orang.posisi}"><i class="fas fa-briefcase"></i> ${orang.posisi}</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <div title="${orang.email}"><i class="fas fa-envelope"></i> ${orang.email}</div>
+            <div><i class="fas fa-phone-alt"></i> ${orang.telepon}</div>
+            <div class="link-preview" title="${orang.link}">
+              <i class="fas fa-globe"></i>
+              <a href="${orang.link}" target="_blank" rel="noopener">${orang.link}</a>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    /* =====================================================
+       MODUL 1 — BERANDA
+       ===================================================== */
+    const ModulBeranda = {
+      render() {
+        document.getElementById('contentTitle').textContent = 'Beranda';
+        const grid = document.getElementById('dataGrid');
+
+        grid.innerHTML = `
+          <div class="hero-beranda">
+
+            <div class="hero-label">
+              <i class="fas fa-file-alt"></i>
+              Dashboard Surat Lamaran
+            </div>
+
+            <h1 class="hero-title">
+              Surat Lamaran<br>
+              <span class="gradient">Kerja Profesional</span>
+            </h1>
+
+            <p class="hero-subtitle">
+              Kelola CV & surat lamaran dalam satu tempat.
+            </p>
+
+            <div class="hero-divider"></div>
+
+            <p class="hero-desc">
+              Selamat datang di <strong>CV•Board</strong> — dashboard untuk mengelola data
+              pelamar kerja, surat lamaran, dan CV secara terpusat. Gunakan menu di sebelah
+              kiri untuk melihat koleksi foto CV atau seluruh data pelamar.
+            </p>
+
+            <div class="hero-stats">
+              <div class="hero-stat">
+                <div class="num green">10</div>
+                <div class="label"><i class="fas fa-users"></i> Pelamar</div>
+              </div>
+              <div class="hero-stat">
+                <div class="num blue">8</div>
+                <div class="label"><i class="fas fa-images"></i> Foto CV</div>
+              </div>
+              <div class="hero-stat">
+                <div class="num blue2">3</div>
+                <div class="label"><i class="fas fa-folder"></i> Kategori</div>
+              </div>
+            </div>
+
+            <div class="hero-footer">
+              <i class="fas fa-info-circle"></i>
+              Pilih menu di sebelah kiri untuk menjelajahi data.
+            </div>
+
+          </div>
+        `;
+      }
+    };
+
+    /* =====================================================
+       MODUL 2 — SEMUA DATA (dengan link web CV)
+       ===================================================== */
+    const ModulSemuaData = {
+      render() {
+        document.getElementById('contentTitle').textContent = 'Semua Data';
+        const grid = document.getElementById('dataGrid');
+
+        if (dataOrang.length === 0) {
+          grid.innerHTML = `<div class="empty-state"><i class="fas fa-folder-open"></i><p>Tidak ada data</p></div>`;
+          return;
+        }
+
+        grid.innerHTML = dataOrang.map(o => buildCard(o)).join('');
+      }
+    };
+
+    /* =====================================================
+       MODUL 3 — KOLEKSI FOTO
+       ===================================================== */
+    const ModulKoleksiFoto = {
+      fotoDummy: [
+        'raihana.jpg',
+        'findi.jpg',
+        'dimas.jpg',
+        'mega.jpg',
+        'tedi.jpg',
+        
+      ],
+      render() {
+        document.getElementById('contentTitle').textContent = 'Koleksi Foto CV';
+        const grid = document.getElementById('dataGrid');
+
+        const fotoHtml = this.fotoDummy.map((src, i) => `
+          <img src="${src}" alt="Foto CV ${i+1}" loading="lazy"
+               data-src="${src}" data-caption="Foto CV ${i+1}">
+        `).join('');
+
+        grid.innerHTML = `
+          <div class="data-card" style="grid-column: 1 / -1; padding: 10px;">
+            <div class="photo-grid-only">${fotoHtml}</div>
+          </div>`;
+
+        grid.querySelectorAll('.photo-grid-only img').forEach(img => {
+          img.addEventListener('click', () => {
+            Lightbox.open(img.dataset.src, img.dataset.caption);
+          });
+        });
+      }
+    };
+
+    /* =====================================================
+       MODUL 4 — LIGHTBOX ZOOM
+       ===================================================== */
+    const Lightbox = {
+      el: document.getElementById('lightbox'),
+      img: document.getElementById('lightboxImg'),
+      caption: document.getElementById('lightboxCaption'),
+      closeBtn: document.getElementById('lightboxClose'),
+
+      init() {
+        this.closeBtn.addEventListener('click', () => this.close());
+        this.el.addEventListener('click', (e) => {
+          if (e.target === this.el) this.close();
+        });
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && this.el.classList.contains('open')) this.close();
+        });
+      },
+
+      open(src, caption) {
+        this.img.src = src;
+        this.caption.textContent = caption || '';
+        this.img.style.transform = 'scale(0.3)';
+        this.img.style.opacity = '0';
+        this.el.classList.add('open');
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            this.img.style.transform = 'scale(1)';
+            this.img.style.opacity = '1';
+          });
+        });
+      },
+
+      close() {
+        this.img.style.transform = 'scale(0.3)';
+        this.img.style.opacity = '0';
+        setTimeout(() => {
+          this.el.classList.remove('open');
+        }, 300);
+      }
+    };
+
+    /* =====================================================
+       NAVIGASI
+       ===================================================== */
+    const Router = {
+      routes: {
+        'beranda': ModulBeranda,
+        'koleksi-foto': ModulKoleksiFoto,
+        'semua-data': ModulSemuaData
+      },
+
+      init() {
+        document.querySelectorAll('.nav-item').forEach(item => {
+          item.addEventListener('click', (e) => {
+            e.preventDefault();
+            this.go(item.dataset.target);
+          });
+        });
+      },
+
+      go(target) {
+        document.querySelectorAll('.nav-item').forEach(i => {
+          i.classList.toggle('active', i.dataset.target === target);
+        });
+        const modul = this.routes[target];
+        if (modul) modul.render();
+      }
+    };
+
+    /* =====================================================
+       INIT
+       ===================================================== */
+    Lightbox.init();
+    Router.init();
+    Router.go('beranda');
+  </script>
+</body>
+</html>
